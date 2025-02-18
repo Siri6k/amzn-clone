@@ -5,12 +5,12 @@ from django.contrib.auth.hashers import make_password
 
 # Create your models here.
 class Users(AbstractUser):
+    name = models.CharField(max_length=100, blank=True, null=True)
     email = models.EmailField(unique=True)
     phone = models.CharField(max_length=15, blank=True, null=True)
     address = models.TextField()
     city = models.CharField(max_length=50, blank=True, null=True)
     state = models.CharField(max_length=50, blank=True, null=True)
-    pincode = models.CharField(max_length=10, blank=True, null=True)
     country = models.CharField(
         max_length=50,
         blank=True,
@@ -18,24 +18,13 @@ class Users(AbstractUser):
         default="Congo",
         choices=(
             ("Congo", "Congo"),
-            ("Zambia", "Zambia"),
             ("Tanzania", "Tanzania"),
             ("Angola", "Angola"),
-            ("Uganda", "Uganda"),
-            ("Rwanda", "Rwanda"),
-            ("India", "India"),
-            ("USA", "USA"),
-            ("UK", "UK"),
-            ("Australia", "Australia"),
-            ("Canada", "Canada"),
-            ("Germany", "Germany"),
-            ("France", "France"),
-            ("Italy", "Italy"),
-            ("Japan", "Japan"),
-            ("China", "China"),
+            ("Zambia", "Zambia"),
+            ("Burundi", "Burundi"),
         ),
     )
-    profile_pic = models.JSONField()
+    profile_pic = models.ImageField(upload_to="profile_pics/", blank=True, null=True)
     account_status = models.CharField(
         max_length=50,
         blank=True,
@@ -71,12 +60,7 @@ class Users(AbstractUser):
         default="English",
         choices=(
             ("English", "English"),
-            ("Spanish", "Spanish"),
             ("French", "French"),
-            ("German", "German"),
-            ("Chinese", "Chinese"),
-            ("Japanese", "Japanese"),
-            ("Swahili", "Swahili"),
         ),
     )
     departMent = models.CharField(
@@ -85,28 +69,13 @@ class Users(AbstractUser):
         null=True,
         choices=(
             ("IT", "IT"),
-            ("HR", "HR"),
             ("Finance", "Finance"),
             ("Sales", "Sales"),
             ("Marketing", "Marketing"),
             ("Production", "Production"),
-            ("Quality Control", "Quality Control"),
-            ("Purchase", "Purchase"),
-            ("Logistics", "Logistics"),
-            ("Customer Service", "Customer Service"),
-            ("R&D", "R&D"),
-            ("Legal", "Legal"),
-            ("Admin", "Admin"),
-            ("Security", "Security"),
-            ("Housekeeping", "Housekeeping"),
             ("Maintenance", "Maintenance"),
             ("Engineering", "Engineering"),
-            ("Design", "Design"),
-            ("Testing", "Testing"),
-            ("Training", "Training"),
             ("Consulting", "Consulting"),
-            ("Support", "Support"),
-            ("Operations", "Operations"),
             ("Management", "Management"),
             ("Others", "Others"),
         ),
@@ -121,80 +90,6 @@ class Users(AbstractUser):
             ("CTO", "CTO"),
             ("CMO", "CMO"),
             ("COO", "COO"),
-            ("CIO", "CIO"),
-            ("CISO", "CISO"),
-            ("CDO", "CDO"),
-            ("CRO", "CRO"),
-            ("CSO", "CSO"),
-            ("CPO", "CPO"),
-            ("CLO", "CLO"),
-            ("CBO", "CBO"),
-            ("CVO", "CVO"),
-            ("CNO", "CNO"),
-            ("CQO", "CQO"),
-            ("CPDO", "CPDO"),
-            ("CCO", "CCO"),
-            ("CDO", "CDO"),
-            ("CLO", "CLO"),
-            ("CBO", "CBO"),
-            ("CVO", "CVO"),
-            ("CNO", "CNO"),
-            ("CQO", "CQO"),
-            ("CPDO", "CPDO"),
-            ("CCO", "CCO"),
-            ("CDO", "CDO"),
-            ("CLO", "CLO"),
-            ("CBO", "CBO"),
-            ("CVO", "CVO"),
-            ("CNO", "CNO"),
-            ("CQO", "CQO"),
-            ("CPDO", "CPDO"),
-            ("CCO", "CCO"),
-            ("CDO", "CDO"),
-            ("CLO", "CLO"),
-            ("CBO", "CBO"),
-            ("CVO", "CVO"),
-            ("CNO", "CNO"),
-            ("CQO", "CQO"),
-            ("CPDO", "CPDO"),
-            ("CCO", "CCO"),
-            ("CDO", "CDO"),
-            ("CLO", "CLO"),
-            ("CBO", "CBO"),
-            ("CVO", "CVO"),
-            ("CNO", "CNO"),
-            ("CQO", "CQO"),
-            ("CPDO", "CPDO"),
-            ("CCO", "CCO"),
-            ("CDO", "CDO"),
-            ("CLO", "CLO"),
-            ("CBO", "CBO"),
-            ("CVO", "CVO"),
-            ("CNO", "CNO"),
-            ("CQO", "CQO"),
-            ("CPDO", "CPDO"),
-            ("CCO", "CCO"),
-            ("CDO", "CDO"),
-            ("CLO", "CLO"),
-            ("CBO", "CBO"),
-            ("CVO", "CVO"),
-            ("CNO", "CNO"),
-            ("CQO", "CQO"),
-            ("CPDO", "CPDO"),
-            ("CCO", "CCO"),
-            ("CDO", "CDO"),
-            ("CLO", "CLO"),
-            ("CBO", "CBO"),
-            ("CVO", "CVO"),
-            ("CNO", "CNO"),
-            ("CQO", "CQO"),
-            ("CPDO", "CPDO"),
-            ("CCO", "CCO"),
-            ("CDO", "CDO"),
-            ("CLO", "CLO"),
-            ("CBO", "CBO"),
-            ("CVO", "CVO"),
-            ("CNO", "CNO"),
             ("Other", "Other"),
         ),
     )
@@ -202,7 +97,7 @@ class Users(AbstractUser):
         max_length=50,
         blank=True,
         null=True,
-        default="UTC+05:30",
+        default="UTC+02:00",
         choices=(
             ("UTC-12:00", "UTC-12:00"),
             ("UTC-11:00", "UTC-11:00"),
@@ -251,22 +146,24 @@ class Users(AbstractUser):
         max_length=50,
         blank=True,
         null=True,
-        default="USD",
+        default="CDF",
         choices=(
-            ("USD", "USD"),
             ("CDF", "CDF"),
+            ("USD", "USD"),
             ("EUR", "EUR"),
             ("GBP", "GBP"),
         ),
     )
-    domain_user_id = models.ForeignKey(
-        "self",
-        on_delete=models.CASCADE,
+    domain_user_id = models.CharField(
+        max_length=50,
         blank=True,
         null=True,
-        related_name="domain_user_id_user",
     )
-    domain_name = models.CharField(max_length=50, blank=True, null=True)
+    domain_name = models.CharField(
+        max_length=50,
+        blank=True,
+        null=True,
+    )
     plan_type = models.CharField(
         max_length=50,
         blank=True,
@@ -280,30 +177,8 @@ class Users(AbstractUser):
             ("Enterprise", "Enterprise"),
         ),
     )
-    added_by_user_id = models.ForeignKey(
-        "self",
-        on_delete=models.CASCADE,
-        blank=True,
-        null=True,
-        related_name="added_by_user_id_user",
-    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-
-    def defaultkey():
-        return "username"
-
-    def save(self, *args, **kwargs):
-        if not self.domain_user_id and self.id:
-            self.domain_user_id = Users.objects.get(id=self.id)
-
-        if (
-            not self.pk
-            or Users.objects.filter(pk=self.pk).values("password").first()["password"]
-            != self.password
-        ):
-            self.password = make_password(self.password)
-        super().save(*args, **kwargs)
 
 
 class UserShippingAddress(models.Model):
@@ -323,21 +198,10 @@ class UserShippingAddress(models.Model):
         max_length=50,
         choices=(
             ("Congo", "Congo"),
-            ("Zambia", "Zambia"),
             ("Tanzania", "Tanzania"),
             ("Angola", "Angola"),
-            ("Uganda", "Uganda"),
-            ("Rwanda", "Rwanda"),
-            ("India", "India"),
-            ("USA", "USA"),
-            ("UK", "UK"),
-            ("Australia", "Australia"),
-            ("Canada", "Canada"),
-            ("Germany", "Germany"),
-            ("France", "France"),
-            ("Italy", "Italy"),
-            ("Japan", "Japan"),
-            ("China", "China"),
+            ("Zambia", "Zambia"),
+            ("Burundi", "Burundi"),
         ),
     )
     created_at = models.DateTimeField(auto_now_add=True)
