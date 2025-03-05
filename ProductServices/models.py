@@ -30,9 +30,6 @@ class Categories(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    def defaultkey():
-        return "name"
-
 
 class Products(models.Model):
     id = models.AutoField(primary_key=True)

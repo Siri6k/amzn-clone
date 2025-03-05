@@ -180,6 +180,9 @@ class Users(AbstractUser):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def defaultkey():
+        return "username"
+
 
 class UserShippingAddress(models.Model):
     id = models.AutoField(primary_key=True)
