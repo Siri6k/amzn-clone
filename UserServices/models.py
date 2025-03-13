@@ -154,11 +154,14 @@ class Users(AbstractUser):
             ("GBP", "GBP"),
         ),
     )
-    domain_user_id = models.CharField(
-        max_length=50,
-        blank=True,
-        null=True,
-    )
+    domain_user_id = models.ForeignKey(
+        'self',
+        on_delete=models.CASCADE, 
+        blank=True, 
+        null=True, 
+        related_name='domain_user_id_user'
+        )
+  
     domain_name = models.CharField(
         max_length=50,
         blank=True,
@@ -177,11 +180,18 @@ class Users(AbstractUser):
             ("Enterprise", "Enterprise"),
         ),
     )
+    added_by_user_id=models.ForeignKey('self',on_delete=models.CASCADE,blank=True,null=True,related_name='added_by_user_id_user')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def defaultkey():
         return "username"
+    
+    def save(self, *args, **kwargs):
+        if not self.domain_user_id and self.id:
+            self.domain_user_id = Users.objects.get(id=self.id)
+        super().save(*args, **kwargs)
+        
 
 
 class UserShippingAddress(models.Model):

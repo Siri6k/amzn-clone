@@ -15,6 +15,20 @@ class SignupAPIView(APIView):
         password = request.data.get("password")
         profile_pic = request.data.get("profile_pic")
 
+        emailcheck = Users.objects.filter(email=email)
+        if emailcheck.exists():
+            return Response(
+                {"error": "Email Already Exists!"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        
+        usernamecheck = Users.objects.filter(username=username)
+        if usernamecheck.exists():  
+            return Response(
+                {"error": "Username Already Exists!"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
         if username is None or password is None or email is None:
             return Response(
                 {"error": "Please provide both username and password"},
@@ -24,6 +38,8 @@ class SignupAPIView(APIView):
         user = Users.objects.create_user(
             username=username, email=email, password=password, profile_pic=profile_pic
         )
+        if request.data.get("domain_user_id"):
+            user.domain_user_id = Users.objects.get(id=request.data.get("domain_user_id"))
         user.save()
 
         refresh = RefreshToken.for_user(user)
