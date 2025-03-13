@@ -61,6 +61,11 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "corsheaders.middleware.CorsMiddleware",
 ]
+
+REST_FRAMEWORK = {
+    "EXCEPTION_HANDLER": "EcommerceInventory.Helpers.custom_exception_handler",
+}
+
 # Allow requests from your frontend (localhost:3000 in this case)
 CORS_ORIGIN_WHITELIST = [
     "http://localhost:3000",
