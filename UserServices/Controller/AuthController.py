@@ -3,9 +3,10 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import IsAuthenticated
-from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework_simplejwt.authentication import JWTAuthentication  # type: ignore
 from django.contrib.auth import authenticate
 from UserServices.models import Users
+from EcommerceInventory.Helpers import renderResponse
 
 
 class SignupAPIView(APIView):
@@ -17,29 +18,21 @@ class SignupAPIView(APIView):
 
         emailcheck = Users.objects.filter(email=email)
         if emailcheck.exists():
-            return Response(
-                {"error": "Email Already Exists!"},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-        
+            return renderResponse(data="Email Already Exists", message="Email Already Exists", status=status.HTTP_400_BAD_REQUEST)
+
         usernamecheck = Users.objects.filter(username=username)
-        if usernamecheck.exists():  
-            return Response(
-                {"error": "Username Already Exists!"},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
+        if usernamecheck.exists():
+            return renderResponse(data="Username Already Exists", message="Username Already Exists", status=status.HTTP_400_BAD_REQUEST)
 
         if username is None or password is None or email is None:
-            return Response(
-                {"error": "Please provide both username and password"},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
+            return renderResponse(data="Please provide both username and password", message="Please provide both username and password", status=status.HTTP_400_BAD_REQUEST)
 
         user = Users.objects.create_user(
             username=username, email=email, password=password, profile_pic=profile_pic
         )
         if request.data.get("domain_user_id"):
-            user.domain_user_id = Users.objects.get(id=request.data.get("domain_user_id"))
+            user.domain_user_id = Users.objects.get(
+                id=request.data.get("domain_user_id"))
         user.save()
 
         refresh = RefreshToken.for_user(user)
@@ -65,10 +58,7 @@ class LoginAPIView(APIView):
         password = request.data.get("password")
 
         if username is None or password is None:
-            return Response(
-                {"error": "Please provide both username and password"},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
+            return renderResponse(data="Please provide both username and password", message="Please provide both username and password", status=status.HTTP_400_BAD_REQUEST)
 
         user = authenticate(username=username, password=password)
         if user:
@@ -86,18 +76,27 @@ class LoginAPIView(APIView):
                 }
             )
         else:
-            return Response(
-                {"error": "Invalid username or password"},
-                status=status.HTTP_400_BAD_REQUEST,
+            return renderResponse(
+                data="Invalid username or password",
+                message="Invalid username or password",
+                status=status.HTTP_400_BAD_REQUEST
             )
 
     def get(self, request):
-        return Response({"message": "Please Use Post to Login!"})
+        return renderResponse(
+            data="Please Use Post to Login!",
+            message="Please Use Post to Login!",
+            status=status.HTTP_400_BAD_REQUEST
+        )
 
 
 class PublicAPIView(APIView):
     def get(self, request):
-        return Response({"message": "This is a public API!"})
+        return renderResponse(
+            data="This is a public API!",
+            message="This is a public API!",
+            status=status.HTTP_400_BAD_REQUEST
+        )
 
 
 class ProtectedAPIView(APIView):
@@ -105,4 +104,8 @@ class ProtectedAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        return Response({"message": "This is a protected API!"})
+        return renderResponse(
+            data="This is a protected API!",
+            message="This is a protected API!",
+            status=status.HTTP_400_BAD_REQUEST
+        )

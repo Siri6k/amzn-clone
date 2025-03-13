@@ -1,5 +1,7 @@
 from django.db.models import ForeignKey
 
+from rest_framework.response import Response
+
 
 def getDynamicFormModels():
     return {
@@ -97,3 +99,34 @@ def getDynamicFormFields(model_instance, domain_user_id):
                 fielddata["type"] = "select"
         fields[fielddata["type"]].append(fielddata)
     return fields
+
+
+def renderResponse(message, data, status=200):
+    if status >= 200 and status < 300:
+        return Response({
+            "data": data,
+            "message": message,
+        }, status=status)
+    else:
+        if isinstance(data, dict):
+            return Response({
+                "errors": parseDictToList(data),
+                "message": message,
+            }, status=status)
+        elif isinstance(data, list):
+            return Response({
+                "errors": data,
+                "message": message,
+            }, status=status)
+        else:
+            return Response({
+                "errors": [data],
+                "message": message,
+            }, status=status)
+
+
+def parseDictToList(data):
+    values = []
+    for key, value in data.items():
+        values.extend(value)
+    return values

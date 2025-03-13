@@ -24,7 +24,8 @@ class Users(AbstractUser):
             ("Burundi", "Burundi"),
         ),
     )
-    profile_pic = models.ImageField(upload_to="profile_pics/", blank=True, null=True)
+    profile_pic = models.ImageField(
+        upload_to="profile_pics/", blank=True, null=True)
     account_status = models.CharField(
         max_length=50,
         blank=True,
@@ -156,12 +157,12 @@ class Users(AbstractUser):
     )
     domain_user_id = models.ForeignKey(
         'self',
-        on_delete=models.CASCADE, 
-        blank=True, 
-        null=True, 
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
         related_name='domain_user_id_user'
-        )
-  
+    )
+
     domain_name = models.CharField(
         max_length=50,
         blank=True,
@@ -180,18 +181,18 @@ class Users(AbstractUser):
             ("Enterprise", "Enterprise"),
         ),
     )
-    added_by_user_id=models.ForeignKey('self',on_delete=models.CASCADE,blank=True,null=True,related_name='added_by_user_id_user')
+    added_by_user_id = models.ForeignKey(
+        'self', on_delete=models.CASCADE, blank=True, null=True, related_name='added_by_user_id_user')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def defaultkey():
         return "username"
-    
+
     def save(self, *args, **kwargs):
         if not self.domain_user_id and self.id:
             self.domain_user_id = Users.objects.get(id=self.id)
         super().save(*args, **kwargs)
-        
 
 
 class UserShippingAddress(models.Model):
@@ -232,7 +233,8 @@ class Modules(models.Model):
         "self", on_delete=models.CASCADE, blank=True, null=True
     )
     display_order = models.IntegerField(default=0)
-    module_description = models.CharField(null=True, blank=True, max_length=255)
+    module_description = models.CharField(
+        null=True, blank=True, max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -257,7 +259,8 @@ class UserPermissions(models.Model):
 
 class ModuleUrls(models.Model):
     id = models.AutoField(primary_key=True)
-    module = models.ForeignKey(Modules, on_delete=models.CASCADE, blank=True, null=True)
+    module = models.ForeignKey(
+        Modules, on_delete=models.CASCADE, blank=True, null=True)
     url = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
