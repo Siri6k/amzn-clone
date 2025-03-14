@@ -47,6 +47,8 @@ class Users(AbstractUser):
             ("Supplier", "Supplier"),
             ("Customer", "Customer"),
             ("Staff", "Staff"),
+            ("Manager", "Manager"),
+            ("Super Admin", "Super Admin"),
         ),
     )
     dob = models.DateField(blank=True, null=True)

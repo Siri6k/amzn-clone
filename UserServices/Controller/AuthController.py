@@ -7,6 +7,7 @@ from rest_framework_simplejwt.authentication import JWTAuthentication  # type: i
 from django.contrib.auth import authenticate
 from UserServices.models import Users
 from EcommerceInventory.Helpers import renderResponse
+from EcommerceInventory.permission import IsSuperAdmin
 
 
 class SignupAPIView(APIView):
@@ -107,5 +108,16 @@ class ProtectedAPIView(APIView):
         return renderResponse(
             data="This is a protected API!",
             message="This is a protected API!",
+            status=status.HTTP_400_BAD_REQUEST
+        )
+    
+class SuperAdminCheckApi(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated, IsSuperAdmin]
+
+    def get(self, request):
+        return renderResponse(
+            data="This is a Super Admin API!",
+            message="This is a Super Admin API!",
             status=status.HTTP_400_BAD_REQUEST
         )
