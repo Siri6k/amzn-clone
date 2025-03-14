@@ -17,6 +17,12 @@ def getDynamicFormModels():
     }
 
 
+def getSuperAdminDynamicFormModels():
+    return {
+        "modules": "UserServices.Modules",
+    }
+
+
 def checkIsFiledFields(field):
     return field in ["image", "file", "path", "video", "audio"]
 
