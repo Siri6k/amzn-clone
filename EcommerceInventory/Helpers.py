@@ -14,6 +14,8 @@ def getDynamicFormModels():
         "product": "ProductServices.Products",
         "category": "ProductServices.Categories",
         "warehouse": "InventoryServices.Warehouse",
+        "supplier": "UserServices.Users",
+
     }
 
 
