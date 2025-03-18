@@ -67,8 +67,7 @@ class DynamicFormController(APIView):
            
         # creating a copy of post data
         fields = request.data.copy()
-        fields["domain_user_id"] = request.user.domain_user_id
-        fields["added_by_user_id"] = Users.objects.get(id=request.user.id)
+       
 
         fieldsdata = {
             key: value for key, value in fields.items() if key in model_fields
@@ -98,8 +97,14 @@ class DynamicFormController(APIView):
                         message=f"{field.name} Relation Not Exist Found",
                         status=404
                     )
-                   
+            # allow empty foreign key on post data
+            elif field.is_relation and field.name in fieldsdata:
+                fieldsdata.pop(field.name)
 
+          
+        fieldsdata["domain_user_id"] = request.user.domain_user_id        
+        fieldsdata["added_by_user_id"] = Users.objects.get(id=request.user.id)
+        
         model_instance = model_class.objects.create(**fieldsdata)
 
         serialized_data = serializer("json", [model_instance])
