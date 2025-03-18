@@ -7,7 +7,7 @@ from rest_framework.exceptions import (
     NotAuthenticated,
     PermissionDenied,
 )
-
+from rest_framework.pagination import PageNumberPagination
 
 def getDynamicFormModels():
     return {
@@ -170,3 +170,7 @@ def custom_exception_handler(exc, context):
             status=exc.status_code
         )
     return response
+
+class CustomPageNumberPagination(PageNumberPagination):
+    page_size_query_param = "pageSize"
+    max_page_size = 100

@@ -22,9 +22,12 @@ urlpatterns = [
         SuperAdminDynamicFormController.as_view(),
         name="SuperAdmindynamicForm",
     ),
-      path(
+    path(
         "api/getMenus/",
         ModuleView.as_view(),
         name="sidebarmenu",
     ),
+    path("api/products/", include("ProductServices.urls")),
+
+
 ]
