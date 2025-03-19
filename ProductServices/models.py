@@ -7,7 +7,7 @@ from UserServices.models import Users
 class Categories(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255)
-    image = models.JSONField(blank=True, null=True)
+    image = models.TextField(default="no-image")
     description = models.TextField()
     display_order = models.IntegerField(default=0)
     parent_id = models.ForeignKey(
